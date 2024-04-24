@@ -1,6 +1,6 @@
 # Naming convention module for Glue
 module "naming-glue" {
-  source              = "git::https://github.com/rpavenk/AWS_Glue_Terragrunt.git/modules//tf-module-01standardnaming-v1.0.1//?ref=main"
+  source              = "git::https://github.com/rpavenk/AWS_Glue_Terragrunt.git/modules//tf-module-01standardnaming-v1.0.1.git"
   environment         = var.environment
   account             = var.account
   project_code            = var.project_code
