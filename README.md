@@ -1,5 +1,6 @@
 # AWS_Glue_Terragrunt
 Terragrunt module for AWS Glue
+
 This code is created for AWS Glue Modules to migrate/copy data from a source JDBC to a destination JDBC Glue connection, it creates multiple resources at once for Glue Catalog DB, Glue Connections, Glue Crawlers, Glue Jobs and Glue Triggers. 
 
 The use case for this Application and Module code is to migrate/copy data from Oracle database/datasource from RDS to a Aurora PostgreSQL RDS table or any JDBC connection to another JDBC database.
