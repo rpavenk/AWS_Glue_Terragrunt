@@ -1,43 +1,38 @@
-variable "enable_glue_crawler" {
-  description = "Enable glue connection usage"
-  default     = false
+variable "glue_additional_tags" {
+  type = map(string)
+  default     = {}
+  description = "Any addtional tags to be applied for Glue. Format should be {key1=value1,key2=value2}"
 }
 
-variable "glue_policy_statements" {
-  description   = "List of iam policy statements for glue"
-  type          = list(object({
-    sid         = string
-    effect      = string
-    actions     = list(string)
-    resources   = list(string)
+variable "glue_arguments" {
+  description = "Arguments to pass to the Glue Job"
+  type    = map
+  default = {}
+}
+
+
+variable "glue_trigger_configurations" {
+  description = "List of trigger configurations for Glue jobs"
+  type = list(object({
+    glue_trigger_name_suffix= string
+    trigger_type            = string
+    schedule                = string
+    enabled                 = bool
+    actions                 = list(object({
+      job_name              = string
+    }))
   }))
   default = [
     {
-      sid      = "AllowSecretManager"
-      effect   = "Allow"
-      actions  = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
-      resources= ["arn:aws:secretsmanager:*:*:secret:rds-db-credentials/*"]
-    }
-  ]
-}
-
-variable "glue_crawlers" {
-  description                     = "List of glue crawlers to create"
-  type                            = list(object({
-    glue_crawler_name_suffix      = string
-    glue_catalog_database_name    = string
-    glue_connection_name          = string
-    connection_path               = list(string)
-    glue_schedule_expression      = string
-
-  }))
-  default = [
-    {
-      glue_crawler_name_suffix      = null
-      glue_catalog_database_name    = null
-      glue_connection_name          = null
-      connection_path               = [null, null]
-      glue_schedule_expression      = "cron(0 0 * * ? *)"
+      glue_trigger_name_suffix  = null
+      trigger_type              = "SCHEDULED"
+      schedule                  = "cron(0 12 * * ? *)"
+      enabled                   = false
+      actions = [
+        {
+          job_name = null
+        }
+      ]
     }
   ]
 }
@@ -99,7 +94,7 @@ variable "custom_billing" {
     environment = string
   }))
   default     = []
-  description = "A list of ([project_code],[environment]) for custom billing purpose, i.e. where billing is not the same than naming (mainly for shared resources)."
+  description = "A list"
 }
 
 variable "map_migrated" {
@@ -117,11 +112,5 @@ variable "map_migrated_app" {
 variable "number" {
   type        = string
   description = "Incremental number, e.g. '1, '2', '3' ..."
-}
-
-variable "glue_additional_tags" {
-  type = map(string)
-  default     = {}
-  description = "Any addtional tags to be applied for Glue. Format should be {key1=value1,key2=value2}"
 }
 

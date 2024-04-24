@@ -1,3 +1,28 @@
+variable "glue_additional_tags" {
+  type = map(string)
+  default     = {}
+  description = "Any addtional tags to be applied for Glue. Format should be {key1=value1,key2=value2}"
+}
+
+variable "enable_glue_catalog_database" {
+  description = "Enable glue connection usage"
+  default     = false
+}
+
+variable "glue_catalog_databases" {
+  description = "List of glue catalog databases to create"
+  type        = list(object({
+    glue_database_name_suffix            = string
+    glue_catalog_database_location_uri   = string
+  }))
+  default = [
+    {
+      glue_database_name_suffix          = null
+      glue_catalog_database_location_uri = "/"
+    }
+  ]
+}
+
 variable "account" {
   type        = string
   description = "Acount, e.g 'test' ..."
@@ -75,27 +100,3 @@ variable "number" {
   description = "Incremental number, e.g. '1, '2', '3' ..."
 }
 
-variable "glue_additional_tags" {
-  type = map(string)
-  default     = {}
-  description = "Any addtional tags to be applied for Glue. Format should be {key1=value1,key2=value2}"
-}
-
-variable "enable_glue_catalog_database" {
-  description = "Enable glue connection usage"
-  default     = false
-}
-
-variable "glue_catalog_databases" {
-  description = "List of glue catalog databases to create"
-  type        = list(object({
-    glue_database_name_suffix            = string
-    glue_catalog_database_location_uri   = string
-  }))
-  default = [
-    {
-      glue_database_name_suffix          = null
-      glue_catalog_database_location_uri = "/"
-    }
-  ]
-}

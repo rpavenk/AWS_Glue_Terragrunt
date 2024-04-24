@@ -1,43 +1,51 @@
-variable "enable_glue_crawler" {
-  description = "Enable glue connection usage"
-  default     = false
-}
-
-variable "glue_policy_statements" {
-  description   = "List of iam policy statements for glue"
-  type          = list(object({
-    sid         = string
-    effect      = string
-    actions     = list(string)
-    resources   = list(string)
+variable "glue_job_configurations" {
+  description = "List of job configurations for multiple Glue jobs"
+  type = list(object({
+    glue_job_name_suffix     = string
+    glue_role_arn            = string
+    script_location          = string
+    glue_job_version         = string
+    glue_job_python_version  = string
+    glue_connections         = list(string)
+    job_parameters           = list(object({
+      name                   = string
+      value                  = string
+    }))
   }))
   default = [
     {
-      sid      = "AllowSecretManager"
-      effect   = "Allow"
-      actions  = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
-      resources= ["arn:aws:secretsmanager:*:*:secret:rds-db-credentials/*"]
-    }
-  ]
-}
-
-variable "glue_crawlers" {
-  description                     = "List of glue crawlers to create"
-  type                            = list(object({
-    glue_crawler_name_suffix      = string
-    glue_catalog_database_name    = string
-    glue_connection_name          = string
-    connection_path               = list(string)
-    glue_schedule_expression      = string
-
-  }))
-  default = [
-    {
-      glue_crawler_name_suffix      = null
-      glue_catalog_database_name    = null
-      glue_connection_name          = null
-      connection_path               = [null, null]
-      glue_schedule_expression      = "cron(0 0 * * ? *)"
+      glue_job_name_suffix   = null
+      glue_role_arn          = null
+      script_location        = null
+      glue_job_version       = "4.0"
+      glue_job_python_version= "3"
+      glue_connections   = [null]
+      job_parameters   = [
+        {
+          name  = "--SRC_DB"
+          value = null
+        },
+        {
+          name  = "--SRC_TABLE"
+          value = null
+        },
+        {
+          name  = "--DEST_DB"
+          value = null
+        },
+        {
+          name  = "--DEST_TABLE"
+          value = null
+        },
+        {
+          name  = "--SRC_CONNECTION"
+          value = null
+        },
+        {
+          name  = "--DEST_CONNECTION"
+          value = null
+        }
+      ]
     }
   ]
 }
@@ -99,7 +107,7 @@ variable "custom_billing" {
     environment = string
   }))
   default     = []
-  description = "A list of ([project_code],[environment]) for custom billing purpose, i.e. where billing is not the same than naming (mainly for shared resources)."
+  description = "A list"
 }
 
 variable "map_migrated" {
@@ -124,4 +132,5 @@ variable "glue_additional_tags" {
   default     = {}
   description = "Any addtional tags to be applied for Glue. Format should be {key1=value1,key2=value2}"
 }
+
 
